@@ -1,0 +1,20 @@
+#message-acknowledge {
+    font-size: 12px;
+    margin: 12px 0;
+}
+#message-acknowledge input {
+    padding: 3px 5px 3px 16px;
+}
+
+.greenMessage {
+    background-color: #dff2bf;
+    border-color: #4f8a10;
+}
+.yellowMessage {
+    background-color: #feefb3;
+    border-color: #9f6000;
+}
+.blueMessage {
+    background-color: #bde5f8;
+    border-color: #00529b;
+}

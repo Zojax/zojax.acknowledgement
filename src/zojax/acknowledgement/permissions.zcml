@@ -1,0 +1,25 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="quick.acknowledgement">
+
+  <permission
+     id="zojax.AddAcknowledgement"
+     title="Add Acknowledgement"
+     description="Allow to enable Acknowledgement functionality for content." />
+
+  <!-- permissions -->
+  <zojax:permission
+     permission="zojax.AddAcknowledgement"
+     category="zojax.content.permissions.interfaces.IManagementPermission" />
+
+  <!--zojax:contentpermission
+     for="zojax.content.space.interfaces.IContentSpace"
+     contenttype="contenttype.project"
+     permission="zojax.AddAcknowledgement"
+     managepermission="zojax.ManageContentPermission"
+     class="zojax.content.permissions.content.ContentPermission"
+     category="zojax.content.permissions.interfaces.IManagementPermission" /-->
+
+</configure>

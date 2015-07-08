@@ -1,0 +1,73 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zojax="http://namespaces.zope.org/zojax"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="zojax.acknowledgement"
+    >
+
+    <!-- edit content wizard -->
+    <zojax:pagelet
+        name="content.acknowledgement"
+        type="form.subform"
+        for="..interfaces.IContentWithAcknowledgement
+             zojax.content.forms.interfaces.IContentStep"
+        class=".editwizard.AcknowledgementEditForm"
+        weight="100" />
+
+    <zojax:pageelement
+        title="Acknowledgement Message"
+        name="content.acknowledgement"
+        class=".acknowledgement.AcknowledgementMessagePageElement"
+        manager=".interfaces.IAcknowledgementMessage" />
+
+
+    <include file="jsonrpc.zcml" />
+
+    <zojax:resourcedirectory
+        name="resources"
+        directory="resources" />
+
+    <!-- styles -->
+    <zojax:resourceinclude
+        name="zojax-acknowledgement.css"
+        library="zojax" type="stylesheet"
+        path="resources/styles.css" filetype="zrt" />
+
+    <!-- actions cartegory -->
+    <utility
+        name="acknowledgements.revisions"
+        component=".actions.ContentAcknowledgements" />
+
+  <!-- acknowledgements actions -->
+  <adapter
+     name="zojax.acknowledgement.acknowledgements"
+     factory=".actions.AcknowledgementsAction" />
+
+  <!--browser:icon
+     name="zmi_icon"
+     file="icons/acknowledgements.png"
+     for=".interfaces.IAcknowledgementsAction" /-->
+
+  <zojax:pagelet
+     name="acknowledged.html"
+     for="..interfaces.IContentWithAcknowledgement"
+     class=".reports.Acknowledged"
+     permission="zojax.ModifyContent" />
+
+  <!-- no acknowledgements actions -->
+  <adapter
+     name="zojax.acknowledgement.noacknowledgements"
+     factory=".actions.NoAcknowledgementsAction" />
+
+  <!--browser:icon
+     name="zmi_icon"
+     file="icons/noacknowledgements.png"
+     for=".interfaces.INoAcknowledgementsAction" /-->
+
+  <zojax:pagelet
+     name="not-acknowledged.html"
+     for="..interfaces.IContentWithAcknowledgement"
+     class=".reports.NotAcknowledged"
+     permission="zojax.ModifyContent" />
+
+</configure>
