@@ -2,6 +2,7 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:zojax="http://namespaces.zope.org/zojax"
+    xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="zojax.acknowledgement">
 
     <include file="permissions.zcml" />
@@ -15,7 +16,7 @@
         for=".interfaces.IContentWithAcknowledgement"
         schema=".interfaces.IContentAcknowledgement"
         class=".extension.ContentAcknowledgementExtension"
-        permission="zojax.AddAnonAccess">
+        permission="zojax.AddAcknowledgement">
 
         <require
             permission="zope.View"
@@ -56,9 +57,22 @@
 
     </zojax:configlet>
 
-  <subscriber handler=".configlet.objectRemovedHandler" />
+    <subscriber handler=".configlet.objectRemovingHandler" />
 
-  <!-- Browser View -->
-  <include package=".browser" />
+    <subscriber handler=".configlet.principalRemovingHandler" />
+
+    <!-- Browser View -->
+    <include package=".browser" />
+
+    <!-- personal acknowledgements workspace -->
+    <adapter
+        name="personal-acknowledgements"
+        factory=".workspace.PersonalAcknowledgementsWorkspaceFactory" />
+
+    <class class=".workspace.PersonalAcknowledgementsWorkspaceFactory">
+        <require
+            permission="zope.View"
+            interface=".interfaces.IPersonalAcknowledgementsWorkspace" />
+    </class>
 
 </configure>

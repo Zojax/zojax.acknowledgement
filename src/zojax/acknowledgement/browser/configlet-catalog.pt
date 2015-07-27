@@ -1,0 +1,46 @@
+<h2 i18n:translate="">Catalog</h2>
+<div class="z-page-description"></div>
+
+<div class="z-table-container">
+  <tal:block tal:condition="view/batch">
+
+    <tal:items define="batch view/batch">
+
+      <tal:block content="structure batch/@@pagelet/batch.view|nothing" />
+
+      <table class="z-table">
+        <thead>
+          <th i18n:translate="">Type</th>
+          <th i18n:translate="">Object</th>
+          <th i18n:translate="">User</th>
+          <th i18n:translate="">Data</th>
+        </thead>
+        <tbody>
+          <tr tal:repeat="data python:batch"
+              tal:attributes="class python:repeat['data'].odd() and 'even' or 'odd'">
+
+            <tal:item define="item python:data[1]">
+
+              <td><tal:block replace="structure item/object/@@zmi_icon" /></td>
+              <td>
+                <a tal:attributes="href string:${item/object/@@absolute_url}/" tal:content="item/object/title">Title</a>
+              </td>
+              <td tal:define="user python:view.getUser(item.principal)">
+                <a tal:attributes="href user/url" tal:content="user/title">Title</a>
+              </td>
+              <td tal:content="structure formatter:fancyDatetime:item/date"></td>
+
+            </tal:item>
+
+          </tr>
+        </tbody>
+      </table>
+
+    </tal:items>
+
+  </tal:block>
+
+  <tal:block condition="not: view/batch">
+    There are no acknowledgements yet.
+  </tal:block>
+</div>

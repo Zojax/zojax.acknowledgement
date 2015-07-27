@@ -1,0 +1,29 @@
+<h2 i18n:translate="">Statistics</h2>
+<div class="z-page-description"></div>
+
+<div class="z-table-container">
+  <tal:block tal:condition="view/records">
+
+    <table class="z-table">
+      <tbody>
+    <tr class="even">
+      <th i18n:translate="">Total Acknowledgements</th>
+      <td tal:content="view/records"></td>
+    </tr>
+    <tr class="odd">
+      <th i18n:translate="">Acknowledged Objects</th>
+      <td tal:content="view/objects"></td>
+    </tr>
+    <tr class="even">
+      <th i18n:translate="">Users</th>
+      <td tal:content="view/users"></td>
+    </tr>
+      </tbody>
+    </table>
+
+  </tal:block>
+
+  <tal:block condition="not:view/records" i18n:translate="">
+    There are no any statistics.
+  </tal:block>
+</div>

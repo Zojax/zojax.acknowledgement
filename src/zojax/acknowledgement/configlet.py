@@ -23,6 +23,8 @@ from zope.component import getUtility
 from zope.proxy import removeAllProxies
 from zope.app.intid.interfaces import IIntIds, IIntIdRemovedEvent
 
+from zojax.authentication.interfaces import IPrincipalRemovingEvent
+
 from catalog import AcknowledgementsCatalog
 from interfaces import IAcknowledgements, IContentAcknowledgementAware
 from interfaces import IAcknowledgementAddedEvent
@@ -135,5 +137,12 @@ class AcknowledgementRemovedEvent(AcknowledgementEvent):
 
 
 @component.adapter(IContentAcknowledgementAware, IIntIdRemovedEvent)
-def objectRemovedHandler(object, ev):
+def objectRemovingHandler(object, ev):
     removeAllProxies(getUtility(IAcknowledgements)).removeObject(object)
+
+
+@component.adapter(IPrincipalRemovingEvent)
+def principalRemovingHandler(event):
+    catalog = getUtility(IAcknowledgements)
+    for record in catalog.search(principal={'any_of': (event.principal.id,)}):
+        catalog.remove(record.id)

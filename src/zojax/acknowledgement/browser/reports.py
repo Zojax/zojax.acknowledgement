@@ -20,13 +20,14 @@ import StringIO
 
 from zope.app.security.interfaces import PrincipalLookupError
 from zope.component import getUtility
+from zope.traversing.browser import absoluteURL
 
+from zojax.batching.batch import Batch
 from zojax.layoutform import Fields
 from zojax.principal.field.utils import searchPrincipals
 from zojax.principal.profile.interfaces import IPersonalProfile
 from zojax.security.utils import getPrincipal
 from zojax.statusmessage.interfaces import IStatusMessage
-from zope.traversing.browser import absoluteURL
 
 from ..interfaces import _, IAcknowledgements
 from interfaces import IPrincipalExported
@@ -118,3 +119,42 @@ class NotAcknowledged(BaseAcknowledged):
             members.append(profile)
 
         return self.export(members)
+
+
+class PersonalAcknowledgements(object):
+
+    title = _('Acknowledgements')
+    description = _("Personal acknowledgements")
+
+    principal_title = None
+
+    def label(self):
+        if self.principal_title is None:
+            return _(u'Your Acknowledged Items')
+        else:
+            return _("${user_title}'s Acknowledged Items",
+                     mapping={'user_title': self.principal_title})
+
+    def description(self):
+        if self.principal_title is None:
+            return _(u'Below is a list of your acknowledged items.')
+        else:
+            return _(u'Below is a list of content items ${user_title} acknowledged.',
+                     mapping={'user_title': self.principal_title})
+
+    def update(self):
+        context = self.context
+        request = self.request
+
+        principal = context.principal
+
+        if principal.id != request.principal.id:
+            profile = IPersonalProfile(principal)
+            self.principal_title = profile.title
+
+        results = getUtility(IAcknowledgements).search(
+            principal={'any_of': (context.principalId,)})
+
+        self.batch = Batch(
+            results, size=20, prefix='acknowledgements',
+            context=context, request=request)

@@ -1,9 +1,9 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:zojax="http://namespaces.zope.org/zojax"
     xmlns:browser="http://namespaces.zope.org/browser"
-    i18n_domain="zojax.acknowledgement"
-    >
+    i18n_domain="zojax.acknowledgement">
 
     <!-- edit content wizard -->
     <zojax:pagelet
@@ -19,7 +19,6 @@
         name="content.acknowledgement"
         class=".acknowledgement.AcknowledgementMessagePageElement"
         manager=".interfaces.IAcknowledgementMessage" />
-
 
     <include file="jsonrpc.zcml" />
 
@@ -38,36 +37,74 @@
         name="acknowledgements.revisions"
         component=".actions.ContentAcknowledgements" />
 
-  <!-- acknowledgements actions -->
-  <adapter
-     name="zojax.acknowledgement.acknowledgements"
-     factory=".actions.AcknowledgementsAction" />
+    <!-- acknowledgements actions -->
+    <adapter
+        name="zojax.acknowledgement.acknowledgements"
+        factory=".actions.AcknowledgementsAction" />
 
-  <!--browser:icon
-     name="zmi_icon"
-     file="icons/acknowledgements.png"
-     for=".interfaces.IAcknowledgementsAction" /-->
+    <!--browser:icon
+        name="zmi_icon"
+        file="icons/acknowledgements.png"
+        for=".interfaces.IAcknowledgementsAction" /-->
 
-  <zojax:pagelet
-     name="acknowledged.html"
-     for="..interfaces.IContentWithAcknowledgement"
-     class=".reports.Acknowledged"
-     permission="zojax.ModifyContent" />
+    <zojax:pagelet
+        name="acknowledged.html"
+        for="..interfaces.IContentWithAcknowledgement"
+        class=".reports.Acknowledged"
+        permission="zojax.ModifyContent" />
 
-  <!-- no acknowledgements actions -->
-  <adapter
-     name="zojax.acknowledgement.noacknowledgements"
-     factory=".actions.NoAcknowledgementsAction" />
+    <!-- no acknowledgements actions -->
+    <adapter
+        name="zojax.acknowledgement.noacknowledgements"
+        factory=".actions.NoAcknowledgementsAction" />
 
-  <!--browser:icon
-     name="zmi_icon"
-     file="icons/noacknowledgements.png"
-     for=".interfaces.INoAcknowledgementsAction" /-->
+    <!--browser:icon
+        name="zmi_icon"
+        file="icons/noacknowledgements.png"
+        for=".interfaces.INoAcknowledgementsAction" /-->
 
-  <zojax:pagelet
-     name="not-acknowledged.html"
-     for="..interfaces.IContentWithAcknowledgement"
-     class=".reports.NotAcknowledged"
-     permission="zojax.ModifyContent" />
+    <zojax:pagelet
+        name="not-acknowledged.html"
+        for="..interfaces.IContentWithAcknowledgement"
+        class=".reports.NotAcknowledged"
+        permission="zojax.ModifyContent" />
+
+    <!-- personal acknowledgements workspace -->
+    <zojax:pagelet
+        name="personal-acknowledgements"
+        for="zojax.personal.space.interfaces.IPersonalSpace"
+        template="personal-acknowledgements.pt"
+        provides="..interfaces.IPersonalAcknowledgementsWorkspace"
+        class=".reports.PersonalAcknowledgements"
+        permission="zope.View" />
+
+    <!-- Configlet -->
+    <zojax:pagelet
+        name="index.html"
+        for="..interfaces.IAcknowledgements"
+        class="zojax.controlpanel.browser.wizard.ConfigletEditWizard"
+        permission="zojax.Configure" />
+
+    <zojax:pagelet
+        name="stats"
+        type="wizard.step"
+        title="Statistics"
+        for="..interfaces.IAcknowledgements
+             zojax.controlpanel.browser.interfaces.IConfigletEditWizard"
+        template="configlet-stats.pt"
+        class=".configlet.AcknowledgementsStatsView"
+        weight="300"
+        permission="zojax.Configure" />
+
+    <zojax:pagelet
+        name="catalog"
+        type="wizard.step"
+        title="Catalog"
+        for="..interfaces.IAcknowledgements
+             zojax.controlpanel.browser.interfaces.IConfigletEditWizard"
+        template="configlet-catalog.pt"
+        class=".configlet.AcknowledgementsCatalogView"
+        weight="400"
+        permission="zojax.Configure" />
 
 </configure>
