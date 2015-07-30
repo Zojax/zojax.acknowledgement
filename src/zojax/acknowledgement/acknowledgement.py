@@ -14,7 +14,6 @@
 """
 $Id$
 """
-from pytz import utc
 from datetime import datetime
 from persistent import Persistent
 

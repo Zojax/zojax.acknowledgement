@@ -14,6 +14,11 @@ add pageelement into the theme
     <tal:block tal:content="structure pageelement:content.acknowledgement" />
 
 
+Build Status
+------------
+[![Build Status](http://jenkins.zojax.com/buildStatus/icon?job=zojax.acknowledgement)](http://jenkins.zojax.com/job/zojax.acknowledgement/)
+
+
 Links
 -----
 
