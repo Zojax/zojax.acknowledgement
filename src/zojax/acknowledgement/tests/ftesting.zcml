@@ -1,0 +1,38 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zojax="http://namespaces.zope.org/zojax"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="zojax.acknowledgement">
+
+  <include package="zojax.autoinclude" file="meta.zcml" />
+  <includeAllDependencies package="zojax.acknowledgement" extras="test" />
+
+ <include package="zojax.acknowledgement.tests" />
+  <includeOverrides package="zojax.acknowledgement.tests" file="overrides.zcml" />
+
+  <securityPolicy
+     component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
+
+  <interface
+      name="DefaultSkin"
+      interface="zojax.acknowledgement.tests.tests.IDefaultSkin"
+      type="zope.publisher.interfaces.browser.IBrowserSkinType" />
+
+  <browser:defaultSkin name="DefaultSkin" />
+
+  <role id="zope.Anonymous" title="Everybody" />
+  <role id="zope.Manager" title="Site Manager" />
+
+  <grant permission="zope.View" role="zope.Anonymous" />
+
+  <unauthenticatedPrincipal id="zope.anybody" title="Unauthenticated User" />
+
+  <principal id="zope.mgr" title="Manager" login="mgr" password="mgrpw" />
+
+  <principal id="zope.user" title="User" login="user" password="userpw" />
+
+  <grant role="zope.Manager" principal="zope.mgr" />
+
+  <grantAll role="zope.Manager" />
+
+</configure>

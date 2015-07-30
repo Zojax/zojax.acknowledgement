@@ -20,6 +20,7 @@ from zope.component import getUtility
 from zope.app.intid.interfaces import IIntIds
 from zope.app.security.interfaces import IUnauthenticatedPrincipal
 
+from zojax.formatter.utils import getFormatter
 from zojax.resourcepackage.library import includeInplaceSource
 
 from ..interfaces import IContentAcknowledgementAware, IAcknowledgements
@@ -42,6 +43,7 @@ class AcknowledgementMessagePageElement(object):
         if not IUnauthenticatedPrincipal.providedBy(self.request.principal):
 
             configlet = getUtility(IAcknowledgements)
+            formatter = getFormatter(self.request, 'fancyDatetime', 'medium')
 
             result = configlet.search(
                 object=self.context,
@@ -50,7 +52,7 @@ class AcknowledgementMessagePageElement(object):
             if len(result) > 0:
                 return msg_success % dict(
                     user=self.request.principal.title,
-                    date=result[0].date.strftime('%B %d, %Y at %I:%M %p'))
+                    date=formatter.format(result[0].date))
 
             return msg_default
 

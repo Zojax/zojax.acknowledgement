@@ -3,6 +3,16 @@ zojax.acknowledgement
 
 The package provides a way to have users to acknowledge they have read and understood a Page, Blog Post, Document, File, etc.
 
+add `Acknowledgements` functionality to the content type:
+
+    <class class="zojax.contenttype.document.document.Document">
+      <implements interface="zojax.acknowledgement.interfaces.IContentWithAcknowledgement" />
+    </class>
+
+add pageelement into the theme
+
+    <tal:block tal:content="structure pageelement:content.acknowledgement" />
+
 
 Links
 -----

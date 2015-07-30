@@ -36,7 +36,7 @@ class Acknowledgement(Persistent):
 
     def __init__(self, date=None, principal=None, **kw):
         if date is None:
-            date = datetime.now(utc)
+            date = datetime.utcnow()
 
         self.date = date
 

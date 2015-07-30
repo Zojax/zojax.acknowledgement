@@ -16,13 +16,15 @@
 
 $Id$
 """
-import datetime
 import logging
-import pytz
+
+from datetime import datetime
 
 from z3c.jsonrpc import publisher
 
 from zope.component import getUtility
+
+from zojax.formatter.utils import getFormatter
 
 from ..acknowledgement import Acknowledgement
 from ..interfaces import IAcknowledgements
@@ -38,7 +40,8 @@ class AcknowledgementAPI(publisher.MethodPublisher):
         if not uid or not oid:
             return dict(error="ERROR: user and object can not be empty")
 
-        date = datetime.datetime.now(tz=pytz.utc)
+        date = datetime.utcnow()
+        formatter = getFormatter(self.request, 'fancyDatetime', 'medium')
 
         try:
             getUtility(IAcknowledgements).add(
@@ -47,4 +50,4 @@ class AcknowledgementAPI(publisher.MethodPublisher):
             return dict(error="ERROR: couldn't add record to catalog")
 
         return dict(user=self.request.principal.title,
-                    date=date.strftime('%B %d, %Y at %I:%M %p'))
+                    date=formatter.format(date))
