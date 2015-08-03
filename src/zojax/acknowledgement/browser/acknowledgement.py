@@ -86,6 +86,7 @@ $(document).ready(function() {
                             .removeClass('statusWarningMessage yellowMessage')
                             .addClass('statusMessage greenMessage')
                             .html(msg.result.user + ', on ' + msg.result.date + ' you acknowledged that you read and understood this document.');
+                        setFancydatetimeFormatter($('#message-acknowledge .zojax-formatter-fancydatetime'));
                     }
                 },
                 error: function (request, status, error) {
