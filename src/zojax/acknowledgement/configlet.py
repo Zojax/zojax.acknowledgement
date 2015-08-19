@@ -120,6 +120,19 @@ class AcknowledgementConfiglet(object):
             self.catalog.unindex_doc(rid)
             del records[rid]
 
+    def verifyRecord(self, uid, oid=None, object=None):
+
+        if oid:
+            object = getUtility(IIntIds).queryObject(oid)
+
+        result = self.catalog.search(object=object,
+                                     principal={'any_of': (uid,)})
+
+        if len(result) > 0:
+            return result[0]
+
+        return False
+
 
 class AcknowledgementEvent(object):
 

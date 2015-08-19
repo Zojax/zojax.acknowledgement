@@ -42,10 +42,10 @@
         name="zojax.acknowledgement.acknowledgements"
         factory=".actions.AcknowledgementsAction" />
 
-    <!--browser:icon
+    <browser:icon
         name="zmi_icon"
-        file="icons/acknowledgements.png"
-        for=".interfaces.IAcknowledgementsAction" /-->
+        file="resources/acknowledged.png"
+        for=".interfaces.IAcknowledgementsAction" />
 
     <zojax:pagelet
         name="acknowledged.html"
@@ -58,10 +58,10 @@
         name="zojax.acknowledgement.noacknowledgements"
         factory=".actions.NoAcknowledgementsAction" />
 
-    <!--browser:icon
+    <browser:icon
         name="zmi_icon"
-        file="icons/noacknowledgements.png"
-        for=".interfaces.INoAcknowledgementsAction" /-->
+        file="resources/notacknowledged.png"
+        for=".interfaces.INoAcknowledgementsAction" />
 
     <zojax:pagelet
         name="not-acknowledged.html"

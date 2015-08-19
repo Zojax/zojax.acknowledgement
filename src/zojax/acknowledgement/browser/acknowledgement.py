@@ -42,17 +42,15 @@ class AcknowledgementMessagePageElement(object):
 
         if not IUnauthenticatedPrincipal.providedBy(self.request.principal):
 
-            configlet = getUtility(IAcknowledgements)
             formatter = getFormatter(self.request, 'fancyDatetime', 'medium')
 
-            result = configlet.search(
-                object=self.context,
-                principal={'any_of': (self.request.principal.id,)})
+            result = getUtility(IAcknowledgements).verifyRecord(
+                object=self.context, uid=self.request.principal.id)
 
-            if len(result) > 0:
+            if result:
                 return msg_success % dict(
                     user=self.request.principal.title,
-                    date=formatter.format(result[0].date))
+                    date=formatter.format(result.date))
 
             return msg_default
 

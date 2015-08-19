@@ -16,8 +16,10 @@
 $Id$
 """
 from zope import interface, component
+from zope.security import checkPermission
 from zope.traversing.browser import absoluteURL
-from zojax.content.actions.action import Action
+
+from zojax.content.actions.contentactions import ContentAction
 from zojax.content.actions.categories import ActionCategory
 
 from ..interfaces import _, IContentWithAcknowledgement
@@ -31,7 +33,7 @@ ContentAcknowledgements = ActionCategory(
     _(u'Acknowledgements'), 25, IContentAcknowledgementsCategory)
 
 
-class AcknowledgementsAction(Action):
+class AcknowledgementsAction(ContentAction):
     interface.implements(IAcknowledgementsAction)
     component.adapts(IContentWithAcknowledgement, interface.Interface)
 
@@ -45,10 +47,14 @@ class AcknowledgementsAction(Action):
             self.context, self.request)
 
     def isAvailable(self):
-        return IContentAcknowledgementAware.providedBy(self.context)
+        if IContentAcknowledgementAware.providedBy(self.context) and \
+                checkPermission('zojax.ModifyContent', self.context):
+            return True
+
+        return False
 
 
-class NoAcknowledgementsAction(Action):
+class NoAcknowledgementsAction(ContentAction):
     interface.implements(INoAcknowledgementsAction)
     component.adapts(IContentWithAcknowledgement, interface.Interface)
 
@@ -62,4 +68,8 @@ class NoAcknowledgementsAction(Action):
             self.context, self.request)
 
     def isAvailable(self):
-        return IContentAcknowledgementAware.providedBy(self.context)
+        if IContentAcknowledgementAware.providedBy(self.context) and \
+                checkPermission('zojax.ModifyContent', self.context):
+            return True
+
+        return False

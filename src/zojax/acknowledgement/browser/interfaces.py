@@ -21,7 +21,7 @@ from zope.schema import TextLine
 
 from z3c.jsonrpc.layer import IJSONRPCLayer
 
-from zojax.content.actions.interfaces import IAction
+from zojax.content.actions.interfaces import IContentAction
 from zojax.principal.profile.interfaces import IPersonalProfile
 from zojax.skintool.interfaces import INoSkinSwitching
 
@@ -40,11 +40,11 @@ class IContentAcknowledgementsCategory(interface.Interface):
     """ acknowledgements actions category """
 
 
-class IAcknowledgementsAction(IAction, IContentAcknowledgementsCategory):
+class IAcknowledgementsAction(IContentAction, IContentAcknowledgementsCategory):
     """ acknowledgements action """
 
 
-class INoAcknowledgementsAction(IAction, IContentAcknowledgementsCategory):
+class INoAcknowledgementsAction(IContentAction, IContentAcknowledgementsCategory):
     """ no acknowledgements action """
 
 

@@ -42,9 +42,14 @@ class AcknowledgementAPI(publisher.MethodPublisher):
 
         date = datetime.utcnow()
         formatter = getFormatter(self.request, 'fancyDatetime', 'medium')
+        configlet = getUtility(IAcknowledgements)
+
+        if configlet.verifyRecord(oid=int(oid), uid=uid):
+            return dict(
+                error="ERROR: You have already acknowledged this document")
 
         try:
-            getUtility(IAcknowledgements).add(
+            configlet.add(
                 Acknowledgement(principal=uid, oid=int(oid), date=date))
         except:
             return dict(error="ERROR: couldn't add record to catalog")
