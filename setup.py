@@ -84,6 +84,8 @@ setup(name='zojax.acknowledgement',
           'zojax.content.table',
           'zojax.content.permissions',
           'zojax.content.actions',
+          'zojax.principal.ban',
+          'zojax.principal.roles',
       ],
       extras_require=dict(test=[
           'zojax.autoinclude',

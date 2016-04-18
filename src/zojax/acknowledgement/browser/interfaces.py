@@ -56,3 +56,4 @@ class IPrincipalExported(IPersonalProfile):
     lastname = TextLine(title=_(u'Principal last name'))
     email = TextLine(title=_(u'Principal email'))
     location = TextLine(title=_(u'Location'))
+    department = TextLine(title=_(u'Department'))
