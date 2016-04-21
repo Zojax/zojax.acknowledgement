@@ -23,6 +23,9 @@
   <role id="zope.Anonymous" title="Everybody" />
   <role id="zope.Manager" title="Site Manager" />
 
+  <zojax:role role="zope.Manager" />
+  <zojax:role role="zope.Anonymous" />
+
   <grant permission="zope.View" role="zope.Anonymous" />
 
   <unauthenticatedPrincipal id="zope.anybody" title="Unauthenticated User" />

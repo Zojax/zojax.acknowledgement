@@ -94,7 +94,8 @@ setup(name='zojax.acknowledgement',
           'zope.testing',
           'zope.testbrowser',
           'zope.securitypolicy',
-          'zojax.security']),
+          'zojax.security',
+          'zojax.principal.users']),
       entry_points="""
     # -*- Entry points: -*-
     """,)

@@ -9,6 +9,8 @@ Browser tests
     >>> from zope.lifecycleevent import ObjectModifiedEvent
     >>> from zope.testbrowser.testing import Browser
 
+    >>> from zojax.principal.users.interfaces import IUsersPlugin
+
     >>> from zojax.authentication.interfaces import IAuthenticationConfiglet, \
     ...     PrincipalRemovingEvent
 
@@ -39,6 +41,76 @@ Declare default variables
     >>> user = Browser()
     >>> user.addHeader("Authorization", "Basic user:userpw")
     >>> user.handleErrors = False
+
+
+Let's create two users to check banned and terminated functionality
+
+First we register plugin with IAuthenticatorPluginFactory
+
+    >>> admin.open("http://localhost/settings/")
+    >>> admin.getLink('Authentication').click()
+    >>> admin.getControl(name='factory_ids:list').value = ['principal.users']
+    >>> admin.getControl(name='form.install').click()
+
+
+then add new principals
+
+    >>> admin.open("http://localhost/settings/principals/")
+    >>> admin.getLink('Member').click()
+    >>> admin.getControl('First Name').value = u'Test'
+    >>> admin.getControl('Last Name').value = u'Banned'
+    >>> admin.getControl('E-mail/Login').value = u'test-banned@zojax.com'
+    >>> admin.getControl('Password').value = u'12345'
+    >>> admin.getControl(name="form.buttons.add").click()
+
+    >>> admin.open("http://localhost/settings/principals/")
+    >>> admin.getLink('Member').click()
+    >>> admin.getControl('First Name').value = u'Test'
+    >>> admin.getControl('Last Name').value = u'Terminated'
+    >>> admin.getControl('E-mail/Login').value = u'test-terminated@zojax.com'
+    >>> admin.getControl('Password').value = u'12345'
+    >>> admin.getControl(name="form.buttons.add").click()
+
+    >>> usersplugin = component.getUtility(IUsersPlugin)
+
+    >>> principal = usersplugin['01']
+    >>> principal.title, principal.login, principal.id
+    (u'Test Banned', u'test-banned@zojax.com', u'zojax.pf01')
+
+    >>> principal = usersplugin['03']
+    >>> principal.title, principal.login, principal.id
+    (u'Test Terminated', u'test-terminated@zojax.com', u'zojax.pf03')
+
+
+and login as new principals
+
+    >>> user3 = Browser()
+    >>> user3.handleErrors = False
+    >>> user3.open("http://localhost/")
+
+    >>> user3.getLink('[Login]').click()
+    >>> user3.getControl('Login Name').value = u'test-banned@zojax.com'
+    >>> user3.getControl('Password').value = u'12345'
+    >>> user3.getControl(name="form.zojax-auth-login").click()
+    >>> print user3.contents
+    <!DOCTYPE html...
+    ...User:...
+    ...Test Ban...
+    </html>
+
+    >>> user4 = Browser()
+    >>> user4.handleErrors = False
+    >>> user4.open("http://localhost/")
+
+    >>> user4.getLink('[Login]').click()
+    >>> user4.getControl('Login Name').value = u'test-terminated@zojax.com'
+    >>> user4.getControl('Password').value = u'12345'
+    >>> user4.getControl(name="form.zojax-auth-login").click()
+    >>> print user4.contents
+    <!DOCTYPE html...
+    ...User:...
+    ...Test Terminated...
+    </html>
 
 
 Add `Acknowledgements` functionality
@@ -96,6 +168,22 @@ Add a few Acknowledgements
     >>> user.contents
     '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"User"},"id":"jsonrpc"}'
 
+    >>> oid = component.getUtility(IIntIds).getId(content1)
+    >>> user.post(
+    ...     jsonURL,
+    ...     "{'method':'add', 'params': {'uid': 'zojax.pf01', 'oid': '"+str(oid)+"'}}",
+    ...     content_type='application/json')
+    >>> user.contents
+    '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"User"},"id":"jsonrpc"}'
+
+    >>> oid = component.getUtility(IIntIds).getId(content1)
+    >>> user.post(
+    ...     jsonURL,
+    ...     "{'method':'add', 'params': {'uid': 'zojax.pf03', 'oid': '"+str(oid)+"'}}",
+    ...     content_type='application/json')
+    >>> user.contents
+    '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"User"},"id":"jsonrpc"}'
+
     >>> oid = component.getUtility(IIntIds).getId(content2)
     >>> admin.post(
     ...     jsonURL,
@@ -112,6 +200,8 @@ Check acknowledged reports
     Principal full name;Principal first name;Principal last name;Principal email;Location;Department;Date
     Manager;Manager;;;;;2015-07-30 08:00 UTC
     User;User;;;;;2015-07-30 08:00 UTC
+    Test Banned;Test;Banned;test-banned@zojax.com;;;2015-07-30 08:00 UTC
+    Test Terminated;Test;Terminated;test-terminated@zojax.com;;;2015-07-30 08:00 UTC
 
     >>> admin.open('http://localhost/content1/not-acknowledged.html')
     >>> print admin.contents
@@ -167,7 +257,7 @@ Statistic tab
     ...
         <tr class="even">
           <th>Total Acknowledgements</th>
-          <td>3</td>
+          <td>5</td>
         </tr>
         <tr class="odd">
           <th>Acknowledged Objects</th>
@@ -175,7 +265,7 @@ Statistic tab
         </tr>
         <tr class="even">
           <th>Users</th>
-          <td>2</td>
+          <td>4</td>
         </tr>
     ...
     </html>
@@ -229,6 +319,53 @@ Catalog tab
     </html>
 
 
+
+Check banned and terminated users
+---------------------------------
+
+
+check that users are available in the report
+
+    >>> admin.open('http://localhost/content1/acknowledged.html')
+    >>> 'Test Ban' in admin.contents
+    True
+
+    >>> 'Test Terminated' in admin.contents
+    True
+
+
+let's ban one user
+
+    >>> admin.open("http://localhost/settings/principals/ban/")
+    >>> admin.getControl(name="form.widgets.principals:list").value = [u'zojax.pf01']
+    >>> admin.getControl('Ban').click()
+    >>> 'Members has been banned' in admin.contents
+    True
+
+
+and check that the user is not in the report
+
+    >>> admin.open('http://localhost/content1/acknowledged.html')
+    >>> 'Test Ban' in admin.contents
+    False
+
+
+let's terminate the other user
+
+    >>> admin.open("http://localhost/settings/principals/zojax.pf03/membership/roles/")
+    >>> admin.getControl(name="zope.Anonymous").value = ['2']
+    >>> admin.getControl(name="form.save").click()
+    >>> 'Roles have been changed' in admin.contents
+    True
+
+
+and check that the user is not in the report
+
+    >>> admin.open('http://localhost/content1/acknowledged.html')
+    >>> 'Test Terminated' in admin.contents
+    False
+
+
 Check object deletion
 ---------------------
 
@@ -249,7 +386,7 @@ Acknowledgements for the deleted object should also be deleted
     ...
         <tr class="even">
           <th>Total Acknowledgements</th>
-          <td>2</td>
+          <td>4</td>
         </tr>
         <tr class="odd">
           <th>Acknowledged Objects</th>
@@ -257,7 +394,7 @@ Acknowledgements for the deleted object should also be deleted
         </tr>
         <tr class="even">
           <th>Users</th>
-          <td>2</td>
+          <td>4</td>
         </tr>
     ...
     </html>
@@ -276,7 +413,7 @@ Acknowledgements for the deleted user should also be deleted
     ...
         <tr class="even">
           <th>Total Acknowledgements</th>
-          <td>1</td>
+          <td>3</td>
         </tr>
         <tr class="odd">
           <th>Acknowledged Objects</th>
@@ -284,7 +421,7 @@ Acknowledgements for the deleted user should also be deleted
         </tr>
         <tr class="even">
           <th>Users</th>
-          <td>1</td>
+          <td>3</td>
         </tr>
     ...
     </html>
