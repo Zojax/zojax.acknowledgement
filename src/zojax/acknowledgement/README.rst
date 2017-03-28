@@ -197,15 +197,15 @@ Check acknowledged reports
 
     >>> admin.open('http://localhost/content1/acknowledged.html')
     >>> print admin.contents
-    Principal full name;Principal first name;Principal last name;Principal email;Location;Department;Date
-    Manager;Manager;;;;;2015-07-30 08:00 UTC
-    User;User;;;;;2015-07-30 08:00 UTC
-    Test Banned;Test;Banned;test-banned@zojax.com;;;2015-07-30 08:00 UTC
-    Test Terminated;Test;Terminated;test-terminated@zojax.com;;;2015-07-30 08:00 UTC
+    Principal full name;Principal first name;Principal last name;Principal email;Location;Department;Date;Manager
+    Manager;Manager;;;;;2015-07-30 08:00 UTC;
+    User;User;;;;;2015-07-30 08:00 UTC;
+    Test Banned;Test;Banned;test-banned@zojax.com;;;2015-07-30 08:00 UTC;
+    Test Terminated;Test;Terminated;test-terminated@zojax.com;;;2015-07-30 08:00 UTC;
 
     >>> admin.open('http://localhost/content1/not-acknowledged.html')
     >>> print admin.contents
-    Principal full name;Principal first name;Principal last name;Principal email;Location;Department
+    Principal full name;Principal first name;Principal last name;Principal email;Location;Department;Manager
     <BLANKLINE>
 
 

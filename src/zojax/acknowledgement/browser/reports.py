@@ -67,15 +67,16 @@ class BaseAcknowledged(object):
         res = StringIO.StringIO()
         fields = self.exportFields.items()
         names = [value.field.title for key, value in fields] + \
-            [u'Location', u'Department']
+            [u'Location', u'Department', u'Manager']
         writer = csv.writer(res, delimiter=';')
         writer.writerow(names)
         for value in data:
             location = value.getProfileData().get('location')
             department = value.getProfileData().get('department')
+            manager = value.getProfileData().get('manager')
             writer.writerow(
                 [unicode(getattr(value, fname, '') or '') for fname,
-                    field in fields] + [location, department])
+                    field in fields] + [location, department, manager])
 
         res.seek(0)
         return res.read()
@@ -132,15 +133,16 @@ class Acknowledged(BaseAcknowledged):
         res = StringIO.StringIO()
         fields = self.exportFields.items()
         names = [value.field.title for key, value in fields] + \
-            [u'Location', u'Department', u'Date']
+            [u'Location', u'Department', u'Date', u'Manager']
         writer = csv.writer(res, delimiter=';')
         writer.writerow(names)
         for userprofile, ack_date in data:
             location = userprofile.getProfileData().get('location')
             department = userprofile.getProfileData().get('department')
+            manager = userprofile.getProfileData().get('manager')
             writer.writerow(
                 [unicode(getattr(userprofile, fname, '') or '') for fname,
-                    field in fields] + [location, department, ack_date])
+                    field in fields] + [location, department, ack_date, manager])
 
         res.seek(0)
         return res.read()
