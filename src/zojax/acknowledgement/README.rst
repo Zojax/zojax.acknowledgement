@@ -42,6 +42,22 @@ Declare default variables
     >>> user.addHeader("Authorization", "Basic user:userpw")
     >>> user.handleErrors = False
 
+    >>> emails = []
+    >>> from email import message_from_string, quopriMIME
+    >>> def send(self, fromaddr, toaddr, message):
+    ...     message = message_from_string(message)
+    ...     emails.append((fromaddr, toaddr, message['subject'], message.get_payload(decode=1)))
+    >>> def getEMails(clear=True):
+    ...     global emails
+    ...     m = list(emails)
+    ...     if clear:
+    ...         emails = []
+    ...     return m
+
+    >>> from zope.sendmail.mailer import SMTPMailer
+    >>> oldSend = SMTPMailer.send
+    >>> SMTPMailer.send = send
+
 
 Let's create two users to check banned and terminated functionality
 
@@ -148,6 +164,21 @@ Enable Acknowledgements for content1 and content2
     True
 
 
+Check email field
+
+    >>> IContentAcknowledgement(content2).emails_list
+
+    >>> admin.open('http://localhost/content2/context.html')
+    >>> admin.getControl(name="form.widgets.emails_list.buttons.add").click()
+    >>> admin.getControl(name='form.widgets.emails_list.0').value = 'test1@zojax.com'
+    >>> admin.getControl(name="form.widgets.emails_list.buttons.add").click()
+    >>> admin.getControl(name='form.widgets.emails_list.1').value = 'test2@zojax.com'
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+
+    >>> IContentAcknowledgement(content2).emails_list
+    (u'test1@zojax.com', u'test2@zojax.com')
+
+
 Add a few Acknowledgements
 
     >>> jsonURL = 'http://localhost/++skin++JSONRPC.acknowledgement'
@@ -191,6 +222,24 @@ Add a few Acknowledgements
     ...     content_type='application/json')
     >>> admin.contents
     '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"Manager"},"id":"jsonrpc"}'
+
+
+Check notification
+
+    >>> len(emails)
+    1
+
+    >>> emails[-1][1:3]
+    ((u'test1@zojax.com', u'test2@zojax.com'), 'New Acknowledgement for Content2')
+
+    >>> print emails[-1][3]
+    ...
+    <h1>Details of the acknowledgement</h1>
+    <p>
+        On 2015-07-30 08:00 UTC, Manager acknowledged reading and understanding the material contained in <a
+    href="http://127.0.0.1/content2/">Content2</a>.
+    </p>
+    <style></style>
 
 
 Check acknowledged reports
@@ -457,4 +506,5 @@ Acknowledgements for the deleted user should also be deleted
 Cleanup
 -------
 
+    >>> SMTPMailer.send = oldSend
     >>> setSite(None)

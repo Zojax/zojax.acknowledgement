@@ -86,6 +86,8 @@ setup(name='zojax.acknowledgement',
           'zojax.content.actions',
           'zojax.principal.ban',
           'zojax.principal.roles',
+          'zojax.mail',
+          'zojax.mailtemplate',
       ],
       extras_require=dict(test=[
           'zojax.autoinclude',

@@ -107,4 +107,12 @@
         weight="400"
         permission="zojax.Configure" />
 
+    <!-- mail notification -->
+    <zojax:mailtemplate
+        name="html"
+        for="..interfaces.IAcknowledgement"
+        contentType="text/html"
+        template="template.pt"
+        class=".template.AcknowledgementAddedNotification" />
+
 </configure>

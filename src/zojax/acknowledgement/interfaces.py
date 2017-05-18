@@ -18,8 +18,12 @@ $Id$
 
 from zope import schema, interface
 from zope.component.interfaces import IObjectEvent
-from zojax.content.space.interfaces import IWorkspace, IWorkspaceFactory
 from zope.i18nmessageid import MessageFactory
+
+from z3c.schema.email.field import RFC822MailAddress
+
+from zojax.content.space.interfaces import IWorkspace, IWorkspaceFactory
+from zojax.widget.list.field import SimpleList
 
 _ = MessageFactory('zojax.acknowledgement')
 
@@ -74,6 +78,12 @@ class IContentAcknowledgement(interface.Interface):
         title=_('Enable Acknowledgement'),
         description=_(''),
         default=False,
+        required=False)
+
+    emails_list = schema.Tuple(
+        title=_(u'Send Acknowledgement notifications to emails'),
+        description=_('Please use Add button to add each email.'),
+        value_type=RFC822MailAddress(),
         required=False)
 
 

@@ -61,6 +61,8 @@
 
     <subscriber handler=".configlet.principalRemovingHandler" />
 
+    <subscriber handler=".configlet.acknowledgementAddedHandler" />
+
     <!-- Browser View -->
     <include package=".browser" />
 

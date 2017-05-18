@@ -1,0 +1,7 @@
+<tal:block define="info view/info">
+    <h1 i18n:translate="">Details of the acknowledgement</h1>
+    <p>
+        On <tal:block replace="info/datetime" />, <tal:block replace="info/user" /> acknowledged reading and understanding the material contained in <a href="" tal:content="info/title" tal:attributes="href info/url">Title</a>.
+    </p>
+    <style></style>
+</tal:block>

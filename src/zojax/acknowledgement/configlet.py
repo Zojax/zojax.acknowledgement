@@ -19,15 +19,18 @@ import random
 import BTrees
 
 from zope import interface, event, component
-from zope.component import getUtility
-from zope.proxy import removeAllProxies
 from zope.app.intid.interfaces import IIntIds, IIntIdRemovedEvent
+from zope.component import getUtility, getMultiAdapter, ComponentLookupError
+from zope.proxy import removeAllProxies
+from zope.publisher.browser import TestRequest
 
 from zojax.authentication.interfaces import IPrincipalRemovingEvent
+from zojax.catalog.utils import getRequest
+from zojax.mailtemplate.interfaces import IMailTemplate
 
 from catalog import AcknowledgementsCatalog
 from interfaces import IAcknowledgements, IContentAcknowledgementAware
-from interfaces import IAcknowledgementAddedEvent
+from interfaces import IAcknowledgementAddedEvent, IContentAcknowledgement
 from interfaces import IAcknowledgementRemovedEvent
 
 
@@ -159,3 +162,24 @@ def principalRemovingHandler(event):
     catalog = getUtility(IAcknowledgements)
     for record in catalog.search(principal={'any_of': (event.principal.id,)}):
         catalog.remove(record.id)
+
+
+@component.adapter(IContentAcknowledgementAware, IAcknowledgementAddedEvent)
+def acknowledgementAddedHandler(object, ev):
+    obj = IContentAcknowledgement(object)
+    if not obj:
+        return
+
+    emails = obj.emails_list
+    if not emails:
+        return
+
+    try:
+        template = getMultiAdapter((ev.record, getRequest()),
+                                   IMailTemplate,
+                                   'html')
+    except ComponentLookupError:
+        template = getMultiAdapter((ev.record, TestRequest()),
+                                   IMailTemplate,
+                                   'html')
+    template.send(emails)
