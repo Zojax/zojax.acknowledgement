@@ -42,7 +42,7 @@ class AcknowledgementMessagePageElement(object):
 
         if not IUnauthenticatedPrincipal.providedBy(self.request.principal):
 
-            formatter = getFormatter(self.request, 'fancyDatetime', 'medium')
+            formatter = getFormatter(self.request, 'dateTime', 'medium')
 
             result = getUtility(IAcknowledgements).verifyRecord(
                 object=self.context, uid=self.request.principal.id)
@@ -84,7 +84,7 @@ $(document).ready(function() {
                             .removeClass('statusWarningMessage yellowMessage')
                             .addClass('statusMessage greenMessage')
                             .html(msg.result.user + ', on ' + msg.result.date + ' you acknowledged that you read and understood this document.');
-                        setFancydatetimeFormatter($('#message-acknowledge .zojax-formatter-fancydatetime'));
+                        setDatetimeFormatter($('#message-acknowledge .zojax-formatter-datetime'));
                     }
                 },
                 error: function (request, status, error) {

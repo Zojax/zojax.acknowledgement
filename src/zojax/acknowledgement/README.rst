@@ -189,7 +189,7 @@ Add a few Acknowledgements
     ...     "{'method':'add', 'params': {'uid': 'zope.mgr', 'oid': '"+str(oid)+"'}}",
     ...     content_type='application/json')
     >>> admin.contents
-    '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"Manager"},"id":"jsonrpc"}'
+    '{"jsonrpc":"2.0","result":{"date":"...Jul 30, 2015 08:00:00 AM...","user":"Manager"},"id":"jsonrpc"}'
 
     >>> oid = component.getUtility(IIntIds).getId(content1)
     >>> user.post(
@@ -197,7 +197,7 @@ Add a few Acknowledgements
     ...     "{'method':'add', 'params': {'uid': 'zope.user', 'oid': '"+str(oid)+"'}}",
     ...     content_type='application/json')
     >>> user.contents
-    '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"User"},"id":"jsonrpc"}'
+    '{"jsonrpc":"2.0","result":{"date":"...Jul 30, 2015 08:00:00 AM...","user":"User"},"id":"jsonrpc"}'
 
     >>> oid = component.getUtility(IIntIds).getId(content1)
     >>> user.post(
@@ -205,7 +205,7 @@ Add a few Acknowledgements
     ...     "{'method':'add', 'params': {'uid': 'zojax.pf01', 'oid': '"+str(oid)+"'}}",
     ...     content_type='application/json')
     >>> user.contents
-    '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"User"},"id":"jsonrpc"}'
+    '{"jsonrpc":"2.0","result":{"date":"...Jul 30, 2015 08:00:00 AM...","user":"User"},"id":"jsonrpc"}'
 
     >>> oid = component.getUtility(IIntIds).getId(content1)
     >>> user.post(
@@ -213,7 +213,7 @@ Add a few Acknowledgements
     ...     "{'method':'add', 'params': {'uid': 'zojax.pf03', 'oid': '"+str(oid)+"'}}",
     ...     content_type='application/json')
     >>> user.contents
-    '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"User"},"id":"jsonrpc"}'
+    '{"jsonrpc":"2.0","result":{"date":"...Jul 30, 2015 08:00:00 AM...","user":"User"},"id":"jsonrpc"}'
 
     >>> oid = component.getUtility(IIntIds).getId(content2)
     >>> admin.post(
@@ -221,7 +221,7 @@ Add a few Acknowledgements
     ...     "{'method':'add', 'params': {'uid': 'zope.mgr', 'oid': '"+str(oid)+"'}}",
     ...     content_type='application/json')
     >>> admin.contents
-    '{"jsonrpc":"2.0","result":{"date":"...July 30, 2015 01:00...","user":"Manager"},"id":"jsonrpc"}'
+    '{"jsonrpc":"2.0","result":{"date":"...Jul 30, 2015 08:00:00 AM...","user":"Manager"},"id":"jsonrpc"}'
 
 
 Check notification

@@ -41,7 +41,7 @@ class AcknowledgementAPI(publisher.MethodPublisher):
             return dict(error="ERROR: user and object can not be empty")
 
         date = datetime.utcnow()
-        formatter = getFormatter(self.request, 'fancyDatetime', 'medium')
+        formatter = getFormatter(self.request, 'dateTime', 'medium')
         configlet = getUtility(IAcknowledgements)
 
         if configlet.verifyRecord(oid=int(oid), uid=uid):
