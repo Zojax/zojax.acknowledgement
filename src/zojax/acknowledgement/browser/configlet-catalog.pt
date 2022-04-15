@@ -4,6 +4,16 @@
 <div class="z-table-container">
   <tal:block tal:condition="view/batch">
 
+    <p>
+        Press on <strong>Export CSV</strong> to download Acknowledgements report for all active users.
+    </p>
+
+    <div class="z-form-controls">
+      <input type="submit" class="z-form-standalonebtn" i18n:attributes="value"
+             name="form.button.export_csv" value="Export CSV" />
+      <hr />
+    </div>
+
     <tal:items define="batch view/batch">
 
       <tal:block content="structure batch/@@pagelet/batch.view|nothing" />
