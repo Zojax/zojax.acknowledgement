@@ -93,6 +93,8 @@ class AcknowledgementsCatalogView(WizardStepForm):
         for uid, record in records:
             if record.principal in bannedusers:
                 continue
+            if not hasattr(record.object, 'title'):
+                continue
 
             if record.principal in principals:
                 principal = principals[record.principal]
@@ -103,10 +105,11 @@ class AcknowledgementsCatalogView(WizardStepForm):
                 except PrincipalLookupError:
                     continue
 
-            writer.writerow([
-                unicode(principal.title),
-                unicode(record.object.title),
-                record.date.strftime('%Y-%m-%d %H:%M UTC')])
+            if hasattr(principal, 'title'):
+                writer.writerow([
+                    unicode(principal.title),
+                    unicode(record.object.title),
+                    record.date.strftime('%Y-%m-%d %H:%M UTC')])
 
         res.seek(0)
         return res.read()
