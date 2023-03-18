@@ -106,10 +106,16 @@ class AcknowledgementsCatalogView(WizardStepForm):
                     continue
 
             if hasattr(principal, 'title'):
-                writer.writerow([
-                    unicode(principal.title),
-                    unicode(record.object.title),
-                    record.date.strftime('%Y-%m-%d %H:%M UTC')])
+                try:
+                    writer.writerow([
+                        unicode(principal.title),
+                        unicode(record.object.title),
+                        record.date.strftime('%Y-%m-%d %H:%M UTC')])
+                except:
+                    writer.writerow([
+                        unicode(principal.title),
+                        unicode(record.object.title.encode('ascii', 'ignore')),
+                        record.date.strftime('%Y-%m-%d %H:%M UTC')])
 
         res.seek(0)
         return res.read()
